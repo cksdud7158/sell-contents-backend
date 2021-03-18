@@ -6,6 +6,6 @@ export function errorMessage(
 ): CoreOutput {
   return {
     ok: false,
-    error: errorMessageContent + ':::::' + error,
+    error: errorMessageContent + '_' + error,
   };
 }
