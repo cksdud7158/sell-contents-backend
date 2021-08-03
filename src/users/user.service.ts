@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { errorMessage } from 'src/common/common.function';
+import { CoreOutput } from 'src/common/dtos/output.dto';
 import { JwtService } from 'src/jwt/jwt.service';
 import { Repository } from 'typeorm';
 import {
@@ -26,18 +27,27 @@ export class UserService {
     email,
     password,
     roles,
+    nickName,
+    phoneNum,
+    snsUrls,
+    verified,
   }: CreateAccountInput): Promise<CreateAccountOutput> {
     try {
-      const checkExist = await this.users.findOne({ email });
-
-      if (checkExist) {
-        return errorMessage('이미 사용된 이메일입니다.');
+      const { ok, error } = await this.checkExist(email);
+      if (ok != true) {
+        return errorMessage(error);
       }
-      console.log('role::', roles);
       const user = await this.users.save(
-        this.users.create({ email, password, roles }),
+        this.users.create({
+          email,
+          password,
+          roles,
+          nickName,
+          phoneNum,
+          snsUrls,
+          verified,
+        }),
       );
-
       return {
         ok: true,
       };
@@ -86,7 +96,14 @@ export class UserService {
 
   async editProfile(
     userId: number,
-    { password, roles, phoneNum, snsUrls }: EditProfileInput,
+    {
+      password,
+      roles,
+      phoneNum,
+      snsUrls,
+      nickName,
+      profilePicture,
+    }: EditProfileInput,
   ): Promise<EditProfileOutput> {
     try {
       const user = await this.users.findOne(userId);
@@ -102,12 +119,32 @@ export class UserService {
       if (snsUrls) {
         user.snsUrls = snsUrls;
       }
+      if (nickName) {
+        user.nickName = nickName;
+      }
+      if (profilePicture) {
+        user.profilePicture = profilePicture;
+      }
       await this.users.save(user);
       return {
         ok: true,
       };
     } catch (error) {
       return errorMessage('프로필 변경 실패했습니다.', error);
+    }
+  }
+
+  async checkExist(email: string): Promise<CoreOutput> {
+    try {
+      const checkExist = await this.users.findOne({ email });
+      if (checkExist) {
+        return errorMessage('이미 사용된 이메일입니다.');
+      }
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      return errorMessage(error);
     }
   }
 }

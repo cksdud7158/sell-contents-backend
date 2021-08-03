@@ -1,7 +1,6 @@
 import {
   Field,
   InputType,
-  Int,
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
@@ -12,24 +11,35 @@ import * as bcrypt from 'bcrypt';
 import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
 
 export enum UserRole {
-  Admin = 'Admin',
+  NormalUser = 'NormalUser',
   Photo = 'Photo',
   Model = 'Model',
-  NormalUser = 'NormalUser',
+  Admin = 'Admin',
+}
+
+export enum SNS {
+  instagram = 'instagram',
+  facebook = 'facebook',
+  youtube = 'youtube',
+  twitter = 'twitter',
+  ticktok = 'ticktok',
 }
 
 registerEnumType(UserRole, { name: 'UserRole' });
+registerEnumType(SNS, { name: 'SNS' });
 
+// SNS URL 타입
 @InputType('SnsUrlsInputType', { isAbstract: true })
 @ObjectType()
 export class snsUrls {
-  @Field((type) => String)
-  snsName: string;
+  @Field((type) => SNS)
+  snsName: SNS;
 
   @Field((type) => String)
   url: string;
 }
 
+// User Entity
 @InputType('UserInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
@@ -44,22 +54,32 @@ export class User extends CoreEntity {
   @IsString()
   password: string;
 
+  @Column()
+  @Field((type) => String)
+  @IsString()
+  nickName: string;
+
   @Column({ type: 'simple-array', enum: UserRole })
   @Field((type) => [UserRole])
   roles: UserRole[];
 
+  @Column()
+  @Field((type) => String)
+  phoneNum: string;
+
+  @Column({ type: 'json', nullable: true })
+  @Field((type) => [snsUrls], { nullable: true })
+  snsUrls?: snsUrls[];
+
   @Column({ nullable: true })
   @Field((type) => String, { nullable: true })
-  phoneNum?: string;
+  profilePicture?: string;
 
+  // 만약 외국인이면 가입시 자동으로 true로 되게하자
   @Column({ default: false })
   @Field((type) => Boolean)
   @IsBoolean()
   verified: boolean;
-
-  @Column({ type: 'json', nullable: true })
-  @Field((type) => snsUrls, { nullable: true })
-  snsUrls?: snsUrls;
 
   @BeforeInsert()
   @BeforeUpdate()

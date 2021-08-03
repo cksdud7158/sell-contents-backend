@@ -14,11 +14,13 @@ class CreateAccountInput_1 extends PickType(User, [
   'email',
   'password',
   'roles',
+  'nickName',
+  'phoneNum',
 ]) {}
 
 @InputType()
 class CreateAccountInput_2 extends PartialType(
-  PickType(User, ['snsUrls', 'phoneNum']),
+  PickType(User, ['snsUrls', 'verified']),
 ) {}
 
 @InputType()

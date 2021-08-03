@@ -8,7 +8,7 @@ import { User } from './users/entities/user.entity';
 import { Verification } from './users/entities/verification.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { AuthModule } from './auth/auth.module';
-import { ContentsModule } from './contents/contents.module';
+import { ContentModule } from './content/contents.module';
 
 @Module({
   imports: [
@@ -54,7 +54,7 @@ import { ContentsModule } from './contents/contents.module';
       privateKey: process.env.PRIVATE_KEY,
     }),
     AuthModule,
-    ContentsModule,
+    ContentModule,
   ],
   controllers: [],
   providers: [],
