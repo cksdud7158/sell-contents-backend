@@ -1,6 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
+import { CoreOutput } from 'src/common/dtos/output.dto';
 import {
   CreateAccountInput,
   CreateAccountOutput,
@@ -49,5 +50,10 @@ export class UsersResolver {
     @Args('input') editProfileInput: EditProfileInput,
   ): Promise<EditProfileOutput> {
     return this.userService.editProfile(authUser.id, editProfileInput);
+  }
+
+  @Query((returns) => EditProfileOutput)
+  async checkExist(@Args('input') email: string): Promise<CoreOutput> {
+    return this.userService.checkExist(email);
   }
 }
