@@ -13,7 +13,7 @@ import { User } from '../entities/user.entity';
 class CreateAccountInput_1 extends PickType(User, [
   'email',
   'password',
-  'roles',
+  'role',
   'nickName',
   'phoneNum',
 ]) {}

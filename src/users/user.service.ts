@@ -26,7 +26,7 @@ export class UserService {
   async createAccount({
     email,
     password,
-    roles,
+    role,
     nickName,
     phoneNum,
     snsUrls,
@@ -41,7 +41,7 @@ export class UserService {
         this.users.create({
           email,
           password,
-          roles,
+          role,
           nickName,
           phoneNum,
           snsUrls,
@@ -98,7 +98,7 @@ export class UserService {
     userId: number,
     {
       password,
-      roles,
+      role,
       phoneNum,
       snsUrls,
       nickName,
@@ -110,8 +110,8 @@ export class UserService {
       if (password) {
         user.password = password;
       }
-      if (roles) {
-        user.roles = roles;
+      if (role) {
+        user.role = role;
       }
       if (phoneNum) {
         user.phoneNum = phoneNum;

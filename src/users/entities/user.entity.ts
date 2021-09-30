@@ -9,6 +9,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
+import { string } from 'joi';
 
 export enum UserRole {
   NormalUser = 'NormalUser',
@@ -32,8 +33,8 @@ registerEnumType(SNS, { name: 'SNS' });
 @InputType('SnsUrlsInputType', { isAbstract: true })
 @ObjectType()
 export class snsUrls {
-  @Field((type) => SNS)
-  snsName: SNS;
+  @Field((type) => String)
+  snsName: string;
 
   @Field((type) => String)
   url: string;
@@ -60,8 +61,8 @@ export class User extends CoreEntity {
   nickName: string;
 
   @Column({ type: 'simple-array', enum: UserRole })
-  @Field((type) => [UserRole])
-  roles: UserRole[];
+  @Field((type) => UserRole)
+  role: UserRole;
 
   @Column()
   @Field((type) => String)

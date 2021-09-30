@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate {
             return true;
           }
 
-          for (let i of user.roles) {
+          for (let i of user.role) {
             console.log('userRole:::', i);
             if (roles.includes(i)) {
               return true;
